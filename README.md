@@ -2,4 +2,4 @@
 Simple service skeleton.
 
 TODO:
-- [ ] Single dsl support for both Elasticsearch and Mongodb.
+- [ ] Common dsl support for querying both Elasticsearch and Mongodb.
