@@ -1,21 +1,25 @@
 import logging
 
+from src.services.http_client import HttpClient
+from src.services.databases.mongodb import MongoDb
+from src.services.repository import Repository
+
 logging.basicConfig(level=logging.INFO)
 services_logger = logging.getLogger('services')
 
 
 def init_services(app, loop):
-
     services_logger.info("initializing services...")
 
-    from .http_client import init_http_client
-    init_http_client(app)
+    @app.di.register()
+    def settings():
+        return app.settings
 
-    from .databases import init_databases
-    init_databases(app)
+    @app.di.register()
+    def http_client():
+        return HttpClient()
 
-    from .repository import init_repositories
-    init_repositories(app)
-
-
+    @app.di.register()
+    def mongodb(settings):
+        return MongoDb(settings)
 
