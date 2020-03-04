@@ -1,14 +1,16 @@
+import logging
+
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.errors import OperationFailure
 
-from src.services import services_logger
 from src.utils import errors
 
 
+logger = logging.Logger('MongoDB')
+
 class MongoDb(object):
 
-    def __init__(self, app):
-        settings = app.settings
+    def __init__(self, settings):
         self.mongo_client = AsyncIOMotorClient(settings['MONGO_CONNECTION_STRING'])
         self.db = self.mongo_client.get_database(settings['MONGO_DATABASE_NAME'])
 
@@ -50,9 +52,3 @@ class MongoDb(object):
                 )
 
             raise
-
-
-def init_mongodb(app):
-    services_logger.info("Initializing mongodb..")
-    app.mongodb = MongoDb(app)
-
