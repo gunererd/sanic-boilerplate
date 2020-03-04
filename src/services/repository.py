@@ -82,3 +82,11 @@ class Repository(object):
         )
 
         return founded
+
+    async def save(self, resource):
+        result = await self.db.save(
+            document=resource,
+            collection_name=self.collection_name
+        )
+
+        return result
