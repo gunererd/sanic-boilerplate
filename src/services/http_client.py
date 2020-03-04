@@ -1,9 +1,11 @@
-from tornado.httpclient import AsyncHTTPClient
-from tornado.platform.asyncio import to_asyncio_future
+import logging
 
-from src.services import services_logger
+from tornado.httpclient import AsyncHTTPClient
+
 from src.utils import errors
 from src.utils.json_helpers import safe_load
+
+logger = logging.getLogger('http_client')
 
 
 class HttpClient(object):
@@ -28,7 +30,7 @@ class HttpClient(object):
             return safe_load(response)
 
         except Exception as e:
-            services_logger.exception("Exception occured while fetchin url<{}>".format(url))
+            logger.exception("Exception occured while fetchin url<{}>".format(url))
             raise e
 
 
