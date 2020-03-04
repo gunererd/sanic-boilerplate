@@ -1,9 +1,12 @@
+import logging
+
 from bson import ObjectId
 from cachetools import TTLCache
 
-from src.services import services_logger
 from src.utils import errors
 from src.utils.general import hash_me
+
+logger = logging.getLogger('repository')
 
 
 def maybe_object_id(maybe_id):
@@ -17,12 +20,12 @@ def maybe_object_id(maybe_id):
 
 class Repository(object):
 
-    def __init__(self, app, collection_name, db_type):
-        services_logger.info('Repository {} initializing...'.format(collection_name))
+    def __init__(self, db, collection_name):
+        logger.info('Repository {} initializing...'.format(collection_name))
 
         self.cache_hit_counter = 0
         self.cache = TTLCache(maxsize=1000, ttl=300)
-        self.db = getattr(app, db_type)
+        self.db = db
         self.collection_name = collection_name
 
     async def find_one_by(self, where=None, select=None, raise_exec=True, _ensure_domain_id=True, hit_cache=True):
@@ -79,7 +82,3 @@ class Repository(object):
         )
 
         return founded
-
-
-def init_repositories(app):
-    app.contents_repository = Repository(app, 'Contents', 'mongodb')
